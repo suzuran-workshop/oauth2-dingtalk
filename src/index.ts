@@ -26,7 +26,12 @@ app.get("/oauth/authorize", (c) => {
 
 // POST /oauth/token — 用授权码换取 access_token
 app.post("/oauth/token", async (c) => {
-  const { code } = await c.req.json<{ code: string }>();
+  const body = await c.req.parseBody<{ code: string }>();
+  const code = body.code;
+
+  if (!code || typeof code !== "string") {
+    return c.json({ error: "invalid_request", error_description: "code is required" }, 400);
+  }
   const tokenResp = await fetch(
     "https://api.dingtalk.com/v1.0/oauth2/userAccessToken",
     {
@@ -54,7 +59,7 @@ app.post("/oauth/token", async (c) => {
   return c.json({
     access_token: data.accessToken,
     token_type: "bearer",
-    expires_in: 7200,
+    expires_in: data.expireIn,
   });
 });
 

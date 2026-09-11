@@ -3,11 +3,10 @@
   "version": "1.0.0",
   "type": "module",
   "description": "钉钉 OAuth2 适配器，将钉钉登录接口转为标准 OAuth2 端点",
-  "packageManager": "pnpm@11.9.0",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx watch --env-file .env src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node --env-file .env dist/index.js"
   },
   "dependencies": {
     "hono": "^4.10.0",

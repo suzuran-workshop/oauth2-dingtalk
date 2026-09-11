@@ -21,6 +21,24 @@ pnpm install
 cp .env.example .env  # 然后编辑 .env 填入钉钉应用凭据
 ```
 
+- 填写 .env 钉钉应用凭据：
+
+  - CORP_ID：钉钉的 CorpID
+  - CLIENT_ID：钉钉的 ClientID
+  - CLIENT_SECRET：钉钉的 ClientSecret
+  - REDIRECT_URI：OAuth2 客户端的回调地址（如 /api/oauth/callback）
+  > 前三者取自钉钉开放平台、企业内部应用，第四者必须在企业内部应用里登记
+  > 企业内部应用需要开通 Contact.User.Read 权限
+
+- 配置 OAuth2 客户端：
+
+  - Client ID：钉钉的 ClientID
+  - Client Secret：钉钉的 ClientSecret
+  - 授权地址：https://dingtalk.auth.xrl.im/oauth/authorize
+  - 令牌地址：https://dingtalk.auth.xrl.im/oauth/token
+  - 用户信息地址：https://dingtalk.auth.xrl.im/oauth/userinfo
+  - Scopes：openid
+
 - 运行 / 启动：
 
 ```bash
