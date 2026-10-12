@@ -1,0 +1,10 @@
+# 请复制 config.example.yml -> config.yml 并填入真实凭据
+
+port: 28081
+
+orgs:
+  - id: my_org
+    corpId: ding1234567890
+    clientId: ding12345
+    clientSecret: AbCdEfGhIjKlMnOpQrStUvWxYz
+    redirectUri: https://example.com/api/oauth/callback

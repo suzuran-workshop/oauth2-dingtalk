@@ -18,25 +18,32 @@
 
 ```bash
 pnpm install
-cp .env.example .env  # 然后编辑 .env 填入钉钉应用凭据
+cp config.example.yml config.yml  # 然后编辑 config.yml 填入钉钉应用凭据
 ```
 
-- 填写 .env 钉钉应用凭据：
+- 填写 `config.yml` 中的组织凭据：
 
-  - CORP_ID：钉钉的 CorpID
-  - CLIENT_ID：钉钉的 ClientID
-  - CLIENT_SECRET：钉钉的 ClientSecret
-  - REDIRECT_URI：OAuth2 客户端的回调地址（如 /api/oauth/callback）
-  > 前三者取自钉钉开放平台、企业内部应用，第四者必须在企业内部应用里登记
-  > 企业内部应用需要开通 Contact.User.Read 权限
+  ```yaml
+  port: 28081
 
-- 配置 OAuth2 客户端：
+  orgs:
+    - id: my_org           # 组织标识，会出现在 URL 路径中
+      corpId: ding...      # 钉钉 CorpID
+      clientId: ding...    # 钉钉 AppKey
+      clientSecret: ...    # 钉钉 AppSecret
+      redirectUri: https://example.com/api/oauth/callback  # 第三方系统的回调地址
+  ```
 
-  - Client ID：钉钉的 ClientID
-  - Client Secret：钉钉的 ClientSecret
-  - 授权地址：https://dingtalk.auth.xrl.im/oauth/authorize
-  - 令牌地址：https://dingtalk.auth.xrl.im/oauth/token
-  - 用户信息地址：https://dingtalk.auth.xrl.im/oauth/userinfo
+  > 一个 `config.yml` 可配置多个组织，每个组织使用独立的凭据。`id` 会出现在 URL 中（`/<orgId>/authorize`）。
+  > 凭据取自钉钉开放平台「企业内部应用」，需在钉钉后台登记回调地址，并开通 Contact.User.Read 权限。
+
+- 配置 OAuth2 客户端（以 Nextcloud Social Login 为例）：
+
+  - Client ID：对应组织的 `clientId`
+  - Client Secret：对应组织的 `clientSecret`
+  - 授权地址：`https://dingtalk.auth.xrl.im/<orgId>/authorize`
+  - 令牌地址：`https://dingtalk.auth.xrl.im/<orgId>/token`
+  - 用户信息地址：`https://dingtalk.auth.xrl.im/<orgId>/userinfo`
   - Scopes：openid
 
 - 运行 / 启动：
@@ -47,20 +54,18 @@ pnpm build  # 编译
 pnpm start  # 启动编译产物
 ```
 
-### 环境变量
+### 端点
 
-| 变量 | 说明 | 默认值 |
-|------|------|--------|
-| `CORP_ID` | 企业 CorpID（可选，用于锁定企业） | — |
-| `CLIENT_ID` | 钉钉开放平台 AppKey | 必填 |
-| `CLIENT_SECRET` | 钉钉开放平台 AppSecret | 必填 |
-| `REDIRECT_URI` | OAuth2 回调地址 | 必填 |
-| `LOCAL_LISTEN_PORT` | 监听端口 | `28081` |
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/:orgId/authorize` | 重定向到钉钉授权页 |
+| POST | `/:orgId/token` | 用授权码换取 access_token（表单 `code=...`） |
+| GET | `/:orgId/userinfo` | 用 Bearer Token 获取用户信息 |
 
 ## 当前状态
 
 - 阶段：稳定（功能完整，可投入使用）
-- 已知限制：`expires_in` 硬编码为 7200s，未使用钉钉实际返回值；`CORP_ID` 已读取但暂未使用
+- 已知限制：仅支持 Authorization Code Flow；不支持 Refresh Token 和 Client Credentials Flow。
 
 ## 核心技术
 

@@ -4,17 +4,18 @@
   "type": "module",
   "description": "钉钉 OAuth2 适配器，将钉钉登录接口转为标准 OAuth2 端点",
   "scripts": {
-    "dev": "tsx watch --env-file .env src/index.ts",
+    "dev": "tsx watch src/index.ts",
     "build": "tsc",
-    "start": "node --env-file .env dist/index.js"
+    "start": "node dist/index.js"
   },
   "dependencies": {
+    "@hono/node-server": "^1.19.0",
     "hono": "^4.10.0",
-    "@hono/node-server": "^1.19.0"
+    "yaml": "^2.9.1"
   },
   "devDependencies": {
-    "typescript": "^5.9.0",
+    "@types/node": "^24.0.0",
     "tsx": "^4.20.0",
-    "@types/node": "^24.0.0"
+    "typescript": "^5.9.0"
   }
 }
